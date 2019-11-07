@@ -9,9 +9,8 @@ module Geoloco
       GEOCODE_URL = 'https://api.tomtom.com/search/2/geocode/%s.json'
 
       class << self
-        def geocode(address, key:)
-          # wait_qps_limit_time(@last_api_call, qps_limit)
-          # @last_api_call = Time.zone.now
+        def geocode(address, key:, qps_limit: 5)
+          wait_qps_limit_time(qps_limit) unless qps_limit&.zero?
           response = HTTParty.get(geocode_url(address), query: { key: key })
           handle_errors(response)
           map_results(response)
@@ -55,15 +54,12 @@ module Geoloco
         end
         # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-        # def wait_qps_limit_time(calls_per_second)
-        #   return if @last_api_call.nil?
-
-        #   time_since_last_call = Time.zone.now - @last_api_call
-        #   minimum_wait = 1.0.second / calls_per_second
-        #   return if time_since_last_call > minimum_wait
-
-        #   sleep minimum_wait - time_since_last_call
-        # end
+        def wait_qps_limit_time(qps_limit)
+          time_since_last_call = @last_api_call ? Time.now - @last_api_call : 2
+          wait_time = 1.0 / qps_limit.to_f - time_since_last_call
+          sleep wait_time if wait_time.positive?
+          @last_api_call = Time.now
+        end
       end
     end
   end

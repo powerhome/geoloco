@@ -54,28 +54,23 @@ RSpec.describe Geoloco::Adapters::Tomtom do
         Geoloco::Adapters::Tomtom.geocode('address', key: 'any')
       end.to raise_error(Geoloco::Forbidden, '403 - Evil body')
     end
+
+    describe 'Query Per Second limit (qps_limit)' do
+      before do
+        allow(::HTTParty).to receive(:get) { success_response }
+      end
+
+      it 'sleeps until it is safe to make another api call respecting the limit' do
+        Timecop.freeze do
+          Geoloco::Adapters::Tomtom.geocode('adress', key: 'key', qps_limit: 5)
+
+          expect(Geoloco::Adapters::Tomtom).to receive(:sleep).with(0.2)
+          Geoloco::Adapters::Tomtom.geocode('adress', key: 'key', qps_limit: 5)
+
+          expect(Geoloco::Adapters::Tomtom).to receive(:sleep).with(0.5)
+          Geoloco::Adapters::Tomtom.geocode('adress', key: 'key', qps_limit: 2)
+        end
+      end
+    end
   end
-
-  # describe '.wait_qps_limit_time' do
-  #   it 'returns if @last_api_call is nil' do
-  #     expect(Object).not_to receive(:sleep)
-
-  #     expect(Geoloco::Adapters::Tomtom.geocode(nil, Geoloco::Adapters::Tomtom::QPS_LIMIT)).to eq nil
-  #   end
-
-  #   it 'returns if it is already safe to make another api call' do
-  #     expect(Object).not_to receive(:sleep)
-
-  #     expect(Geoloco::Adapters::Tomtom.geocode(0.2.seconds.ago, Geoloco::Adapters::Tomtom::QPS_LIMIT)).to eq nil
-  #   end
-
-  #   it 'sleeps until it is safe to make another api call' do
-  #     expect(Object).to receive(:sleep).with(0.07)
-
-  #     now = Time.zone.now
-  #     Timecop.freeze(now) do
-  #       expect(Geoloco::Adapters::Tomtom.geocode(now - 0.13.seconds, Geoloco::Adapters::Tomtom::QPS_LIMIT)).to eq nil
-  #     end
-  #   end
-  # end
 end
