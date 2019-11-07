@@ -24,6 +24,12 @@ module Geoloco
   end
 
   class << self
+    attr_writer :config
+
+    def config
+      @config || {}
+    end
+
     # Geocodes a given query using the given adapter and options
     #
     # @param query [String] the query to geocode
@@ -33,7 +39,8 @@ module Geoloco
     # @raise [Geoloco::UnknownAdapter] if an unknown adapter is given
     # @raise [Geoloco::Forbidden] if the geocoder API returns a 403 error
     def geocode(query, adapter:, **options)
-      geocoder(adapter).geocode(query, **options)
+      adapter_config = config.fetch(adapter, {}).merge(options)
+      geocoder(adapter).geocode(query, **adapter_config)
     end
 
     private
