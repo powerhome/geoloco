@@ -1,0 +1,57 @@
+{
+  "summary": {
+    "query": "4031 mill road collegeville",
+    "queryType": "NON_NEAR",
+    "queryTime": 622,
+    "numResults": 1,
+    "offset": 0,
+    "totalResults": 78,
+    "fuzzyLevel": 1
+  },
+  "results": [
+    {
+      "type": "Point Address",
+      "id": "US/PAD/p1/48924167",
+      "score": 8.2362,
+      "address": {
+        "streetNumber": "3140",
+        "streetName": "Dan Ave",
+        "municipalitySubdivision": "Collegeville, Evansburg",
+        "municipality": "Collegeville, Evansburg",
+        "countrySecondarySubdivision": "Montgomery",
+        "countryTertiarySubdivision": "Skippack",
+        "countrySubdivision": "PA",
+        "postalCode": "19415",
+        "countryCode": "US",
+        "country": "United States",
+        "countryCodeISO3": "USA",
+        "freeformAddress": "3140 Dan Ave, Collegeville, PA 19415",
+        "localName": "Collegeville",
+        "countrySubdivisionName": "Pennsylvania"
+      },
+      "position": {
+        "lat": 40.10233,
+        "lon": -75.53229
+      },
+      "viewport": {
+        "topLeftPoint": {
+          "lat": 40.10053,
+          "lon": -75.43327
+        },
+        "btmRightPoint": {
+          "lat": 40.20173,
+          "lon": -75.54091
+        }
+      },
+      "entryPoints": [
+        {
+          "type": "main",
+          "position": {
+            "lat": 40.10233,
+            "lon": -75.53229
+          }
+        }
+      ]
+    }
+  ]
+}
