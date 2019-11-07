@@ -4,6 +4,7 @@ require 'geoloco/version'
 require 'geoloco/location'
 require 'geoloco/geometry'
 require 'geoloco/adapters/tomtom'
+require 'geoloco/adapters/google'
 
 module Geoloco
   # Top level Geoloco's error class

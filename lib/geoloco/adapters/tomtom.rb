@@ -13,7 +13,7 @@ module Geoloco
           wait_qps_limit_time(qps_limit) unless qps_limit&.zero?
           response = HTTParty.get(geocode_url(address), query: { key: key })
           handle_errors(response)
-          map_results(response)
+          map_results(response.parsed_response)
         end
 
         private
@@ -27,10 +27,9 @@ module Geoloco
           raise Geoloco::Forbidden, response if response.code == 403
         end
 
-        def map_results(response)
-          response.parsed_response
-                  .fetch('results', [])
-                  .map(&method(:map_result))
+        def map_results(parsed)
+          parsed.fetch('results', [])
+                .map(&method(:map_result))
         end
 
         # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
