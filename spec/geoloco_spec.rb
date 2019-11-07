@@ -49,5 +49,17 @@ RSpec.describe Geoloco do
 
       Geoloco.geocode('lol', adapter: :tomtom, key: 'sad-key')
     end
+
+    it 'uses the default adapter when none is given' do
+      Geoloco.config = { tomtom: { key: 'lol-key' } }
+      Geoloco.default_adapter = :tomtom
+
+      expect(Geoloco::Adapters::Tomtom).to(
+        receive(:geocode)
+          .with('lol', key: 'lol-key')
+      )
+
+      Geoloco.geocode('lol')
+    end
   end
 end
