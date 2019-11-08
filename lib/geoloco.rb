@@ -2,11 +2,12 @@
 
 require 'httparty'
 
-require 'geoloco/version'
-require 'geoloco/location'
 require 'geoloco/geometry'
-require 'geoloco/adapters/tomtom'
+require 'geoloco/location'
+require 'geoloco/version'
+require 'geoloco/adapters/fake'
 require 'geoloco/adapters/google'
+require 'geoloco/adapters/tomtom'
 
 # Geoloco is a multi-adpater geolocation gem, with error
 # handling and test stubs
