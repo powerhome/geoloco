@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'httparty'
-
 module Geoloco
   module Adapters
     # Tomtom geocoding adapter
@@ -11,7 +9,7 @@ module Geoloco
       class << self
         def geocode(address, key:, qps_limit: 5)
           wait_qps_limit_time(qps_limit) unless qps_limit&.zero?
-          response = HTTParty.get(geocode_url(address), query: { key: key })
+          response = Geoloco.http.get(geocode_url(address), query: { key: key })
           handle_errors(response)
           map_results(response.parsed_response)
         end

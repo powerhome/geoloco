@@ -13,7 +13,7 @@ RSpec.describe Geoloco::Adapters::Google do
 
   describe '.geocode' do
     it 'geocodes an address' do
-      expect(::HTTParty).to(
+      expect(Geoloco.http).to(
         receive(:get)
           .with(
             'https://maps.googleapis.com/maps/api/geocode/json?' \
@@ -30,7 +30,7 @@ RSpec.describe Geoloco::Adapters::Google do
     end
 
     it 'maps all location data' do
-      expect(::HTTParty).to receive(:get) { success_response }
+      expect(Geoloco.http).to receive(:get) { success_response }
 
       loc, = Geoloco::Adapters::Google.geocode('2012 Main St', key: '123-key',
                                                                client_id: '123')
@@ -49,7 +49,7 @@ RSpec.describe Geoloco::Adapters::Google do
     end
 
     it 'raises Geoloco::Forbidden when a 403 is received' do
-      expect(::HTTParty).to receive(:get) do
+      expect(Geoloco.http).to receive(:get) do
         double(code: 403, body: 'Evil body', parsed_response: {})
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Geoloco::Adapters::Google do
         'status' => 'OVER_DAILY_LIMIT',
         'error_message' => 'gimme moar money'
       }
-      expect(::HTTParty).to receive(:get) do
+      expect(Geoloco.http).to receive(:get) do
         double(code: 200, parsed_response: parsed_error)
       end
 

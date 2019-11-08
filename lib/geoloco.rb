@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'httparty'
+
 require 'geoloco/version'
 require 'geoloco/location'
 require 'geoloco/geometry'
@@ -24,7 +26,7 @@ module Geoloco
   end
 
   class << self
-    attr_writer :config, :default_adapter
+    attr_writer :config, :default_adapter, :http
 
     def default_adapter
       @default_adapter || :google
@@ -32,6 +34,10 @@ module Geoloco
 
     def config
       @config || {}
+    end
+
+    def http
+      @http || HTTParty
     end
 
     # Geocodes a given query using the given adapter and options

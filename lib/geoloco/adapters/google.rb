@@ -12,7 +12,7 @@ module Geoloco
 
       class << self
         def geocode(address, client_id:, key:)
-          response = HTTParty.get(geocode_url(address, client_id, key))
+          response = Geoloco.http.get(geocode_url(address, client_id, key))
           handle_errors(response, response.parsed_response)
           map_results(response.parsed_response)
         end

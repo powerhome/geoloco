@@ -13,7 +13,7 @@ RSpec.describe Geoloco::Adapters::Tomtom do
 
   describe '.geocode' do
     it 'geocodes an address' do
-      expect(::HTTParty).to(
+      expect(Geoloco.http).to(
         receive(:get)
           .with(
             'https://api.tomtom.com/search/2/geocode/3140+dan+ave.json',
@@ -28,7 +28,7 @@ RSpec.describe Geoloco::Adapters::Tomtom do
     end
 
     it 'maps all location data' do
-      expect(::HTTParty).to receive(:get) { success_response }
+      expect(Geoloco.http).to receive(:get) { success_response }
 
       loc, = Geoloco::Adapters::Tomtom.geocode('3140 dan ave', key: '123-key')
 
@@ -46,7 +46,7 @@ RSpec.describe Geoloco::Adapters::Tomtom do
     end
 
     it 'raises Geoloco::Forbidden when a 403 is received' do
-      expect(::HTTParty).to receive(:get) do
+      expect(Geoloco.http).to receive(:get) do
         double(code: 403, body: 'Evil body')
       end
 
@@ -57,7 +57,7 @@ RSpec.describe Geoloco::Adapters::Tomtom do
 
     describe 'Query Per Second limit (qps_limit)' do
       before do
-        allow(::HTTParty).to receive(:get) { success_response }
+        allow(Geoloco.http).to receive(:get) { success_response }
       end
 
       it 'sleeps until it is safe to make another api call respecting the limit' do
