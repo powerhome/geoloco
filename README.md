@@ -1,4 +1,4 @@
-# Geoloco
+# Geoloco [![Build Status](https://travis-ci.org/powerhome/geoloco.svg?branch=master)](https://travis-ci.org/powerhome/geoloco)
 
 Geoloco is a multi-adpater geolocation gem, with error handling and test stubs
 
