@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    geoloco (0.1.0)
+    geoloco (1.0.0)
       httparty (>= 0.14.0)
 
 GEM
