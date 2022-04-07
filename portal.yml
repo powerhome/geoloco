@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: geoloco
+  title: Geoloco
+  description: Geocoding for ruby with multiple adapters
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: library
+  owner: heroes-for-hire
+  lifecycle: production

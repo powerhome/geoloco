@@ -1,0 +1,6 @@
+site_name: Geoloco
+site_description: Geoloco Documentation
+nav:
+  - "Home": "README.md"
+plugins:
+  - techdocs-core
