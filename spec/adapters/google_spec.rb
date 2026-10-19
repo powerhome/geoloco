@@ -29,6 +29,22 @@ RSpec.describe Geoloco::Adapters::Google do
       expect(loc.full_address).to eql '2012 Main St, Narvon, PA 17555, USA'
     end
 
+    it 'geocodes an address with an api key' do
+      expect(Geoloco.http).to(
+        receive(:get)
+          .with(
+            'https://maps.googleapis.com/maps/api/geocode/json?' \
+            'address=2012+Main+St&key=secret-key'
+          )
+          .and_return(success_response)
+      )
+
+      loc, = Geoloco::Adapters::Google.geocode('2012 Main St', api_key: 'secret-key')
+
+      expect(loc).to be_instance_of Geoloco::Location
+      expect(loc.full_address).to eql '2012 Main St, Narvon, PA 17555, USA'
+    end
+
     it 'maps all location data' do
       expect(Geoloco.http).to receive(:get) { success_response }
 
@@ -70,6 +86,34 @@ RSpec.describe Geoloco::Adapters::Google do
       expect do
         Geoloco::Adapters::Google.geocode('address', key: 'any', client_id: '1')
       end.to raise_error(Geoloco::Error, 'OVER_DAILY_LIMIT - gimme moar money')
+    end
+
+    it 'raises ArgumentError when client credentials and an api key are combined' do
+      expect(Geoloco.http).not_to receive(:get)
+
+      [
+        { client_id: '123', key: '123-key', api_key: 'secret-key' },
+        { client_id: '123', api_key: 'secret-key' }
+      ].each do |credentials|
+        expect do
+          Geoloco::Adapters::Google.geocode('address', **credentials)
+        end.to raise_error(ArgumentError, 'provide client_id and key, or api_key')
+      end
+    end
+
+    it 'raises ArgumentError when credentials are incomplete' do
+      expect(Geoloco.http).not_to receive(:get)
+
+      [
+        {},
+        { client_id: '123' },
+        { key: '123-key' },
+        { key: '123-key', api_key: 'secret-key' }
+      ].each do |credentials|
+        expect do
+          Geoloco::Adapters::Google.geocode('address', **credentials)
+        end.to raise_error(ArgumentError, 'provide client_id and key, or api_key')
+      end
     end
   end
 end
