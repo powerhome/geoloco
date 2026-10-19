@@ -11,8 +11,9 @@ module Geoloco
       GEOCODE_PATH = '/maps/api/geocode/json'
 
       class << self
-        def geocode(address, client_id:, key:)
-          response = Geoloco.http.get(geocode_url(address, client_id, key))
+        def geocode(address, key: nil, client_id: nil, api_key: nil)
+          url = geocode_url(address, client_id, key, api_key)
+          response = Geoloco.http.get(url)
           handle_errors(response, response.parsed_response)
           map_results(response.parsed_response)
         end
@@ -35,7 +36,7 @@ module Geoloco
                 .map(&method(:map_result))
         end
 
-        # rubocop:disable Metrics/MethodLength, Metrics/LineLength, Metrics/AbcSize
+        # rubocop:disable Metrics/
         def map_result(result)
           loc = result.dig('geometry', 'location') || {}
           geometry = Geoloco::Geometry.new(lat: loc['lat'], lng: loc['lng'])
@@ -55,7 +56,7 @@ module Geoloco
             country_code: get_component(result, 'country', 'short_name')
           )
         end
-        # rubocop:enable Metrics/MethodLength, Metrics/LineLength, Metrics/AbcSize
+        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
         def get_component(result, type, data = 'long_name')
           result.fetch('address_components', [])
@@ -63,9 +64,16 @@ module Geoloco
                 &.dig(data)
         end
 
-        def geocode_url(address, client_id, key)
-          query = URI.encode_www_form(client: client_id, address: address)
-          signed_url(GEOCODE_PATH, query, key)
+        def geocode_url(address, client_id, key, api_key)
+          if client_id && key && api_key.nil?
+            query = URI.encode_www_form(client: client_id, address: address)
+            signed_url(GEOCODE_PATH, query, key)
+          elsif api_key && client_id.nil? && key.nil?
+            query = URI.encode_www_form(address: address, key: api_key)
+            "#{API_HOST}#{GEOCODE_PATH}?#{query}"
+          else
+            raise ArgumentError, 'provide client_id and key, or api_key'
+          end
         end
 
         def signed_url(path, query, key)
