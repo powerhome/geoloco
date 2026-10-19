@@ -36,7 +36,7 @@ module Geoloco
                 .map(&method(:map_result))
         end
 
-        # rubocop:disable Metrics/
+        # rubocop:disable Metrics/MethodLength, Metrics/LineLength, Metrics/AbcSize
         def map_result(result)
           loc = result.dig('geometry', 'location') || {}
           geometry = Geoloco::Geometry.new(lat: loc['lat'], lng: loc['lng'])
@@ -56,7 +56,7 @@ module Geoloco
             country_code: get_component(result, 'country', 'short_name')
           )
         end
-        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+        # rubocop:enable Metrics/MethodLength, Metrics/LineLength, Metrics/AbcSize
 
         def get_component(result, type, data = 'long_name')
           result.fetch('address_components', [])
