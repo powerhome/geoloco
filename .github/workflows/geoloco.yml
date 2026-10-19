@@ -1,0 +1,13 @@
+name: geoloco
+
+on:
+  push:
+
+jobs:
+  ruby:
+    uses: powerhome/github-actions-workflows/.github/workflows/ruby-gem.yml@main
+    with:
+      package: ${{ github.workflow }}
+      ruby: '["3.3","3.4","4.0"]'
+      bundler: '["4"]'
+    secrets: inherit
